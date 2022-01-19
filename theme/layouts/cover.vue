@@ -1,12 +1,21 @@
-<script setup lang="ts">
-import Background from '../assets/page-1.vue'
-</script>
-
 <template>
-  <div class="slidev-layout cover">
-    <div class="my-auto w-full">
-      <slot />
+    <div class="cover">
+        <div class="self-center">
+            <slot />
+        </div>
     </div>
-    <Background class="layout-background" />
-  </div>
 </template>
+
+<style>
+.cover {
+    @apply flex h-full;
+}
+
+.cover h1 {
+    @apply text-6xl;
+}
+
+.cover h1 + p {
+    @apply text-2xl mt-2;
+}
+</style>

@@ -1,49 +1,63 @@
 ---
 theme: ./theme
-class: text-center
-highlighter: shiki
 lineNumbers: true
 drawings:
   persist: false
 title: ESLintの独自ルール作成に<br>チャレンジした話
+layout: cover
+highlighter: shiki
+fonts:
+  sans: 'Noto Sans JP'
+  serif: 'Noto Sans JP'
+  mono: 'Fira Code'
 ---
 
 <style lang="scss">
-.slidev-layout.slidev-layout li,
-.slidev-layout.slidev-layout p {
-  line-height: 2.2;
-}
-.slidev-layout.slidev-layout h1 + p {
-  opacity: 1;
-}
-.slidev-layout .list-none {
-  list-style-type: none;
-
-  li {
-    margin-left: 0;
+  .slidev-layout.slidev-layout code {
+    font-size: inherit;
   }
-}
-.slidev-layout.slidev-layout h1 {
-  margin-top: 24px;
-  margin-bottom: 32px;
-}
+  .slidev-layout.slidev-layout li {
+    padding: 8px 16px;
+    background: #33444466;
+    border-radius: 8px;
+
+    li {
+      font-size: .8rem;
+    }
+  }
+  .slidev-layout.slidev-layout p {
+    line-height: 2.2;
+  }
+  .slidev-layout .list-none {
+    list-style-type: none;
+
+    li {
+      margin-left: 0;
+    }
+  }
+  .slidev-layout.slidev-layout h1 {
+    margin-top: 24px;
+    margin-bottom: 32px;
+  }
 </style>
 
 # ESLintの独自ルール作成に<br>チャレンジした話
 
 ## 株式会社NoSchool meijin
 
+
 ---
 
 # 目次
 
-1. 自己紹介
 2. 独自ルールを作ろうと思ったきっかけ
 3. 作って適用する手順
 4. 独自ルールの作りかた
 5. テストの書きかた
-6. 補足① ASTについて
-7. 補足② TypeScript対応
+6. 補足① TypeScript対応
+7. 補足② 運用手段の候補
+9. 余談 勉強会の主催
+10. まとめ
 
 ---
 
@@ -74,8 +88,12 @@ title: ESLintの独自ルール作成に<br>チャレンジした話
 1. 独自ルールを作成して、`rules`などの決まったディレクトリに置く
 2. npm scriptsで`"lint": "eslint --rulesdir rules"`のように、rulesdirを指定する
 
+※`--rulesdir`オプションはDeprecatedなので、他の方法が有力
+
+https://eslint.org/docs/user-guide/command-line-interface
+
 ---
-layout: section
+layout: cover
 ---
 
 # 独自ルールの作りかた
@@ -115,3 +133,207 @@ module.exports = {
     }
 };
 ```
+
+---
+
+# `meta`キーについて
+
+その名の通りルールのメタ情報をオブジェクトで表現する。
+
+ESLint v8から必要となるプロパティが追加されたみたいなので、昔の日本語記事など一部参考にならないものがあるかも。要注意。
+
+https://eslint.org/docs/user-guide/migrating-to-8.0.0#rules-require-metahassuggestions-to-provide-suggestions
+
+```js
+module.exports = {
+    meta: {
+        hasSuggestions: true
+    },
+    create(context) {
+        // your rule
+    }
+};
+```
+
+---
+
+# `create`キーについて
+
+- createは`context`を受け取る関数で、ASTのノードの種類に対応してLintルールを実装する
+  - **プログラム中のこの種類のノードに対しては、このチェックをする**！という考えで実装する
+  - なのでLintに関係ないノードについては実装しなくてよい
+- ここで必要な知識は2つ！
+  - ASTのノードの種類ってなに？ ≒ ASTとはなにか
+  - どうやってLintルールを実装するか
+
+---
+
+# ASTとはなにか
+
+- (広義には)文字列で表現されたプログラムから演算子や変数など、文法的に意味のある情報のみを取り出して、木構造で表現したもの
+  - プログラムは、【プログラム全体->複数のクラス->複数の関数->複数の変数宣言や代入など】といったように木構造で表現できる
+- プログラムを木構造で表現すると、プログラムから扱いやすくなるので、ESLintなどの「**プログラムを意味的に解釈して何らかの動作をするもの**」を実装しやすくなる
+
+---
+
+# ASTを覗いてみる
+
+- https://astexplorer.net/ で簡単な式のAST表現を見てみると、文字列のコードが巨大なJSONとして表現されることがわかる。雑に図解すると以下の感じ
+
+<img width=450 src="https://user-images.githubusercontent.com/7464929/149896210-222e8623-20e5-4aa3-8bb2-5656b6c62e4f.jpg" />
+
+---
+
+# どうやってLintルールを実装するか
+
+- 引数で渡される`context`に、エラーや警告をレポートする`report()`関数や、nodeから変数名を取得できる`getDeclaredVariables()`関数などが入っており、簡単なルールなら十分実装できる
+
+```ts
+    // 変数名が _ から始まっていたらエラーになる独自ルールの例
+    create(context) {
+        return {
+            VariableDeclaration(node) {
+                context.getDeclaredVariables(node).forEach(variable => {
+                    const name = variable.name;
+                    if (name.charAt(0) === "_") {
+                        context.report({
+                            node,
+                            messageId: "unexpected",
+                            data: { name }
+                        });
+                    }
+                });
+            }
+        };
+    }
+```
+
+<div class="absolute right-[60px] bottom-[40px] bg-[#eeeecc] text-[#333] p-2 max-w-[440px] rounded-xl text-sm">
+  <p class="m-0">
+  <code>VariableDeclaration</code>が変数宣言ノードの種類名.
+  </p>
+  <p class="m-0">
+  <code>context.getDeclaredVariables</code>で変数名を全取得.
+  </p>
+  <p class="m-0">
+  <code>context.report</code>でLint結果をレポート.
+  </p>
+</div>
+
+---
+
+# リファレンス
+
+- `context`の仕様
+  - https://eslint.org/docs/developer-guide/working-with-rules#the-context-object
+- `VariableDeclaration`などのASTのノードの種類名
+  - `ESTree` https://github.com/estree/estree/blob/master/es5.md
+  - `@types/eslint` https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/eslint/index.d.ts#L438
+
+---
+
+# テストの書きかた
+
+```ts
+const rule = require("../no-underscore-prefix"),
+   RuleTester = require("eslint").RuleTester;
+const ruleTester = new RuleTester();
+ruleTester.run("no-underscore-prefix", rule, {
+    valid: [
+        "'hoge'",
+        // ...
+        { code: "const obj = { _name: 'hoge' };", env: { es6: true } },
+    ],
+    invalid: [
+        {
+            code: "var _hoge = 'hoge';",
+            errors: [{ messageId: "unexpected", data: { name: "_hoge" }, type: "VariableDeclaration", line: 1, column: 1 }]
+        },
+        // ...
+        { code: "let x,_y = 'hoge';", env: { es6: true }, errors: [{ messageId: "unexpected", data: { name: "_y" }, type: "VariableDeclaration", line: 1, column: 1 }] },
+        // ...
+    ]
+});
+```
+
+<div class="absolute right-[60px] top-[60px] bg-[#eeeecc] text-[#333] p-4 max-w-[400px] rounded-xl text-sm">
+  <p class="m-0">
+  <code>RuleTester</code>を使ってテストを実装.
+  </p>
+  <p class="m-0">
+  <code>valid / invalid</code>キーで正常系と異常系を書く.
+  </p>
+  <p class="m-0">
+  <code>RuleTester</code>のコンストラクタでオプションも色々設定できるらしい.
+  </p>
+</div>
+
+---
+
+# 補足① TypeScript対応
+
+- `@types/eslint`を使う
+  - 以下の記事が詳しい（厳密にはESLint7時代の記事なので少しだけ注意が必要）
+  - https://blog.sa2taka.com/post/custom-eslint-rule-with-typescript
+- ESLint自体はtsを読み込んでくれないので、コンパイルフェーズを自前で組むことに注意
+
+---
+
+# 補足② 運用手段
+
+- 冒頭で示した`--rulesdir`オプションはDeprecated
+- あくまで外部プラグインとして、ローカルフォルダを読み込めるプラグインとしてのアプローチがいくつかある
+- eslint-plugin-rulesdir
+  - https://github.com/not-an-aardvark/eslint-plugin-rulesdir
+  - `eslintrc.js`を使っている前提だが最も最新か？
+- https://github.com/cletusw/eslint-plugin-local-rules
+  - 使い方の癖があるように見えるが、任意のeslintrcの形式で対応できそう
+
+---
+
+# 余談 勉強会の主催
+
+- 今回ESLintの独自ルールを調べるにあたって、勉強会を企画してみました
+  - https://connpass.com/event/232064/
+  - 2021/12/13に開催し、共催の [RyoKawamata](http://twitter.com/KawamataRyo) さんと2時間作業してなんとか形にできた（ありがとうございました）
+- 勉強会駆動開発（Meetup Driven Development, MDD？）よさそう
+- 勉強会企画したい方、一緒に主催できるので声かけてくださいｗ
+
+---
+layout: cover
+---
+
+# 告知
+
+---
+layout: split
+---
+
+<section>
+
+## Twitterフォローしてね
+
+- <span class="ml-2 text-[#1d9bf0] font-bold">@Meijin_garden</span>
+- だいたいWeb開発の話か将棋の話してます
+
+<img src="https://user-images.githubusercontent.com/7464929/149906960-a8f1805c-429a-436b-84e4-3d2e823d3c67.png" alt="" width=400 />
+
+</section>
+
+<section>
+
+## 絶賛エンジニア採用中です！
+
+- オンライン家庭教師のスタートアップです！
+- 2020年リリースで、これから**塾や家庭教師や通信教育を置き換える教育スタイル**を広げていきます
+- 少しでも興味があればカジュアル面談歓迎なので、DMやMeetyでお声がけください！！
+
+<img src="https://user-images.githubusercontent.com/7464929/149907410-f1830653-c2c0-47ff-9a12-1f59cb119a17.png" width=400 alt="">
+
+</section>
+
+---
+layout: cover
+---
+
+# ご清聴ありがとうございました

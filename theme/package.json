@@ -1,36 +1,51 @@
 {
-  "name": "@slidev/theme-shibainu",
-  "version": "0.0.2",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "description": "Shibainu theme for Slidev",
-  "keywords": [
-    "slidev-theme",
-    "slidev"
-  ],
-  "license": "MIT",
-  "slidev": {
-    "colorSchema": "dark",
-    "highlighter": "all",
-    "defaults": {
-      "fonts": {
-        "sans": "Titillium Web",
-        "mono": "Fira Code"
-      }
+    "name": "slidev-theme-geist",
+    "version": "0.6.0",
+    "homepage": "https://github.com/nico-bachner/slidev-theme-geist#readme",
+    "bugs": {
+        "url": "https://github.com/nico-bachner/slidev-theme-geist/issues"
+    },
+    "author": {
+        "name": "Nico Bachner",
+        "email": "yo@nicob.dev",
+        "url": "https://nicob.dev/"
+    },
+    "license": "MIT",
+    "keywords": [
+        "slidev-theme",
+        "slidev"
+    ],
+    "engines": {
+        "node": ">=14",
+        "slidev": ">=0.20"
+    },
+    "slidev": {
+        "highlighter": "prism",
+        "default": {
+            "fonts": {
+                "sans": "Inter",
+                "mono": "Fira Code"
+            }
+        }
+    },
+    "scripts": {
+        "dev": "slidev example.md",
+        "build": "slidev build example.md",
+        "export": "slidev export example.md",
+        "screenshot": "slidev export example.md --format png",
+        "docs:dev": "vitepress dev docs",
+        "docs:build": "vitepress build docs",
+        "format": "prettier --write components/*.vue layouts/* styles.css",
+        "release": "standard-version"
+    },
+    "dependencies": {
+        "@slidev/cli": "^0.20",
+        "@slidev/theme-default": "^0.19"
+    },
+    "devDependencies": {
+        "playwright-chromium": "^1.12",
+        "prettier": "^2.3",
+        "standard-version": "^9.3",
+        "vitepress": "^0.15"
     }
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/slidevjs/themes"
-  },
-  "author": "Inès <ines@inesfendi.com>",
-  "homepage": "https://sli.dev",
-  "bugs": "https://github.com/slidevjs/themes/issues",
-  "dependencies": {
-    "@slidev/types": "^0.22.7",
-    "codemirror-theme-vars": "^0.1.1",
-    "prism-theme-vars": "^0.2.2",
-    "theme-vitesse": "^0.1.12"
-  }
 }

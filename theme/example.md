@@ -1,141 +1,87 @@
 ---
 theme: ./
-layout: cover
 ---
 
-# Presentation title
+# Slidev Theme Geist
 
-Presentation subtitle
+A Vercel theme for Slidev
 
----
-
-# Layout `default`
-
-Slide Subtitle
-
-* Slide bullet text
-  * Slide bullet text
-  * Slide bullet text
-* Slide bullet text
-* Slide bullet text
-
----
-layout: center
----
-
-# Layout `center`
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
----
-layout: section
----
-
-# Layout `section`
-
----
-layout: default-2
----
-
-# Layout `default-2`
-
-Colons can be used to align columns.
-
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-
-
----
-layout: default-3
-class: 'grid text-center h-full content-center'
----
-
-<div class="grid grid-cols-3 gap-4 text-center w-140 m-auto">
-
-<div class="m-auto w-35 h-35 rounded-full bg-[#bf926b]"></div>
-<div class="m-auto w-35 h-35 rounded-full bg-[#bf926b]"></div>
-<div class="m-auto w-35 h-35 rounded-full bg-[#bf926b]"></div>
-
-<div>Lorem</div>
-<div>Ipsum</div>
-<div>Dolor</div>
-
+<div class="pt-24">
+  Press <KBD>space</KBD> to go to the next page ->
 </div>
 
-<br>
-
-Layout `default-3`
-
----
-layout: right
 ---
 
-# Layout `right`
+# What is Slidev?
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Slidev is a slides maker and presenter designed for developers, consist of the following features
 
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-   📝 **Text-based** - focus on the content with Markdown, and then style them later
+-   🎨 **Themeable** - theme can be shared and used with npm packages
+-   🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
+-   🤹 **Interactive** - embedding Vue components to enhance your expressions
+-   🎥 **Recording** - built-in recording and camera view
+-   📤 **Portable** - export into PDF, PNGs, or even a hostable SPA
+-   🛠 **Hackable** - anything possible on a webpage
 
----
-layout: section-2
----
-
-# Section 2
-
-
----
-layout: default-4
----
-
-# Layout `default-4`
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+Read more about [Slidev](https://sli.dev)
 
 ---
-layout: default-5
----
 
-# Layout `default-5`
+# Navigation
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Hover over the bottom-left corner of your screen to see the control panel.
 
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+### Keyboard Shortcuts
 
----
-layout: default-6
----
-
-# Layout `default-6`
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+| shortcut                                             | purpose                     |
+| ---------------------------------------------------- | --------------------------- |
+| <KBD>space</KBD> / <KBD>tab</KBD> / <KBD>right</KBD> | next animation or slide     |
+| <KBD>left</KBD>                                      | previous animation or slide |
+| <KBD>up</KBD>                                        | previous slide              |
+| <KBD>down</KBD>                                      | next slide                  |
 
 ---
-layout: default-7
+
+# Code
+
+Use `code` snippets and get automatic highlighting!
+
+```ts
+// type
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+    role: string;
+}
+
+// function
+function updateUser(id: number, update: Partial<User>) {
+    const user = getUser(id);
+    const newUser = { ...user, ...update };
+    saveUser(id, newUser);
+}
+```
+
 ---
 
-# Layout `default-7`
+# Theme Components
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+## Button
 
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<Button>Button</Button>
+
+## Keyboard Input
+
+<KBD command shift>P</KBD>
+
+## Note
+
+<Note>Note</Note>
 
 ---
-layout: section-3
----
 
-# Section 3
+# Learn More
 
----
-layout: quote
----
-
-# Thanks
+[Documentation](https://sli.dev) / [GitHub Repository](https://github.com/slidevjs/slidev)
