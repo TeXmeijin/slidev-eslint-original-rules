@@ -10,6 +10,7 @@ fonts:
   sans: 'Noto Sans JP'
   serif: 'Noto Sans JP'
   mono: 'Fira Code'
+colorSchema: dark
 ---
 
 <style lang="scss">
@@ -83,12 +84,12 @@ fonts:
 
 # 作って適用する手順
 
-ざっくりいうと、以下の手順で独自ルールを動作させることができた
+今回は以下の手順で独自ルールを動作させることができた。
 
-1. 独自ルールを作成して、`rules`などの決まったディレクトリに置く
+1. 独自ルールを記述したJavaScript(or TS)ファイルを作成して、`rules`ディレクトリに置く
 2. npm scriptsで`"lint": "eslint --rulesdir rules"`のように、rulesdirを指定する
 
-※`--rulesdir`オプションはDeprecatedなので、他の方法が有力
+※`--rulesdir`オプションはDeprecatedなので、他の方法が有力（後述）
 
 https://eslint.org/docs/user-guide/command-line-interface
 
@@ -227,6 +228,7 @@ module.exports = {
 - `context`の仕様
   - https://eslint.org/docs/developer-guide/working-with-rules#the-context-object
 - `VariableDeclaration`などのASTのノードの種類名
+  - 覚える必要はなく、たとえば以下の文献を参照するとよさそう
   - `ESTree` https://github.com/estree/estree/blob/master/es5.md
   - `@types/eslint` https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/eslint/index.d.ts#L438
 
@@ -298,6 +300,14 @@ ruleTester.run("no-underscore-prefix", rule, {
   - 2021/12/13に開催し、共催の [RyoKawamata](http://twitter.com/KawamataRyo) さんと2時間作業してなんとか形にできた（ありがとうございました）
 - 勉強会駆動開発（Meetup Driven Development, MDD？）よさそう
 - 勉強会企画したい方、一緒に主催できるので声かけてくださいｗ
+
+---
+
+# まとめ
+
+- ESLintの独自ルールを書くために難しい知識は必要ない
+- ドキュメントは丁寧だが、概念をつかむまで少々大変なのと、`@types/eslint`などを見たほうが理解が早く進むところがあるので、手を動かして学ぶのが一番早そう
+- 勉強会駆動開発おすすめ
 
 ---
 layout: cover
